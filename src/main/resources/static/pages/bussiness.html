@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Bussiness</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style type="text/css">
+
+        .el-header {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        .el-aside {
+            background-color: #D3DCE6;
+            color: #333;
+            text-align: center;
+            line-height: 745px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 745px;
+        }
+
+        .el-table__header th {
+            padding: 0;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .di {
+            width: 500px;
+            height: 100px;
+        }
+
+        .btu1 {
+            width: 100px;
+            height: 20px;
+        }
+
+        .btu2 {
+            width: 150px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+
+    <el-container>
+        <el-header>
+            外&nbsp&nbsp&nbsp&nbsp&nbsp卖&nbsp&nbsp&nbsp&nbsp管&nbsp&nbsp&nbsp&nbsp理&nbsp&nbsp&nbsp&nbsp系&nbsp&nbsp&nbsp&nbsp统(137)
+        </el-header>
+        <el-container>
+            <el-aside width="200px">
+                <el-menu
+                        default-active="2"
+                        class="el-menu-vertical-demo"
+                        @open="handleOpen"
+                        @close="handleClose">
+                    <el-menu-item index="1" @click="ref">
+                        <template slot="title">
+                            <i class="el-icon-location"></i>
+                            <span>菜单处理</span>
+                        </template>
+                    </el-menu-item>
+                    <el-menu-item index="2" @click="ord">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title">订单处理</span>
+                    </el-menu-item>
+                </el-menu>
+            </el-aside>
+            <el-main id="right" line-height="100px">
+
+                <el-table
+                        id="table"
+                        :data="tableData"
+                        :key="key"
+                        border
+                        style=" margin-bottom: -300px">
+                    <el-table-column
+                            fixed
+                            prop="id"
+                            label="编号"
+                            width="150">
+                    </el-table-column>
+                    <el-table-column
+                            prop="bussinessId"
+                            label="所属商家编号"
+                            width="150">
+                    </el-table-column>
+
+                    <el-table-column
+                            prop="name"
+                            label="名称"
+                            width="150">
+                    </el-table-column>
+                    <el-table-column
+                            prop="price"
+                            label="价格"
+                            width="150">
+                    </el-table-column>
+                    <el-table-column
+                            prop="size"
+                            label="份量"
+                            width="150">
+                    </el-table-column>
+                    <el-table-column
+                            label="操作"
+                            width="150">
+                        <template slot-scope="scope">
+                            <el-button
+                                    @click.native.prevent="deleteRow(scope.$index, tableData)"
+                                    type="text"
+                                    size="small">
+                                移除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            label="操作"
+                            width="150">
+                        <template slot-scope="scope">
+                            <el-button
+                                    @click.native.prevent="modifyRow(scope.$index, tableData)"
+                                    type="text"
+                                    size="small">
+                                修改
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <input style="margin-top:-250px" type="text" placeholder="请输入查找的菜品" v-model="find">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button @click="search">查找</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                <button @click="add">添加菜品</button>
+
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+</body>
+<!--cdn引入ElementUI组件必须先引入Vue-->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- cdn引入ElementUI组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript">
+    // var tha=vm.data.tableData1;
+    function getParams(key) {
+        var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) {
+            return unescape(r[2]);
+        }
+        return null;
+    };
+    var vm = new Vue({
+        el: "#app",//把这个app容器加载到 vue中
+        data: {
+            find: "",
+            tableData: [],
+            textarea1: "",
+            key:1
+        },
+        methods: {  //方法，所有的方法，都写在这里
+            ref:function(){
+                location.href="http://192.168.147.137/mysite/bussiness.html"+"?username="+getParams("username");
+            },
+            ord:function() {//获取所有符合条件的订单
+                var idx = this.tableData[0].bussinessId;
+                location.href = "http://192.168.147.137/mysite/order.html?bussId="+idx+"&username="+getParams("username");
+            },
+            search:function(){
+                axios.post('http://192.168.147.137:8082/food/target1', {
+                    "find": this.find,
+                    "username":getParams("username")// 参数 firstName
+                }).then(function (res) {
+                        vm.tableData=res.data.data;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            add:function(){
+                location.href = "http://192.168.147.137/mysite/addFood.html"+"?username="+getParams("username");
+            },
+            deleteRow: function(index, rows) {
+                var idx = this.tableData[index];
+                var id1 = idx.id;
+                axios.post('http://192.168.147.137:8082/food/delete', {
+                    "id": id1        // 参数 firstName
+                }).then(function (res) {
+
+                })
+                rows.splice(index, 1);
+            },
+            modifyRow: function(index, rows) {
+                var idx = this.tableData[index];
+                var id1 = idx.id;
+                location.href = "http://192.168.147.137/mysite/modifyFood.html" + "?id=" + id1+"&username="+getParams("username");
+
+            }
+
+
+        },
+        created() {
+            axios.post('http://192.168.147.137:8082/bussiness/food',{
+                "username":getParams("username")
+            }).then(function (res) {
+                    vm.tableData=res.data;
+                    alert(vm.tableData);
+                })
+        }
+
+    })
+</script>
+</html>
+      

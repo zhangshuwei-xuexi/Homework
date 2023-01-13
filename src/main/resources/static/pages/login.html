@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试页面</title>
+    <!-- cdn引入ElementUI样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        #app {
+            width: 500px;
+            height: 300px;
+            border: 1px darkgray solid;
+            border-radius: 5px;
+            margin: 200px auto;
+            padding: 20px;
+            text-align: center;
+            background-color: aliceblue;
+        }
+
+        body {
+            background-image: url(http://192.168.147.137/back.jpg);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <h2>登&nbsp;&nbsp;&nbsp;&nbsp; 录(137)</h2>
+    <el-input placeholder="请输入用户名" v-model="username">
+        <template slot="prepend">用户名</template>
+    </el-input>
+    <br><br><br>
+    <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
+
+    <br><br><br>
+    <el-button type="primary" @click="log()">登录</el-button>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <el-button type="primary" @click="reg()">注册</el-button>
+</div>
+
+<!--cdn引入ElementUI组件必须先引入Vue-->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- cdn引入ElementUI组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+<script type="text/javascript">
+    var vm = new Vue({ // 配置对象 options
+        // 配置选项(option)
+        el: '#app',  // element: 指定用vue来管理页面中的哪个标签区域
+        data: {
+            username: "",
+            password: ""
+        },
+        methods: {
+            log() {
+                axios.post('http://192.168.147.137:8082/user/login', {
+                    "username": this.username,        // 参数 firstName
+                    "password": this.password    // 参数 lastName
+                }).then(function (res) {
+                    if (res.data.code == "1") {
+                        location.href = "http://192.168.147.137/mysite/bussiness.html"+"?username="+res.data.data;
+                    }
+                    if (res.data.code == "2") {
+                        location.href = "http://192.168.147.137/mysite/consumer.html"+"?username="+res.data.data;
+                    }
+                    if (res.data.code == "3") {
+                        alert("用户名或密码错误，请重新输入")
+                    }
+                }).catch(function (error) {
+                        console.log(error);
+                });
+            },
+            reg() {
+                var tem = prompt("您要注册为商家还是消费者，商家请输入1，消费者输入2");
+                if (tem == 1) {
+                    location.href = "http://192.168.147.137/mysite/busreg.html";
+                }
+                if (tem == 2) {
+                    location.href = "http://192.168.147.137/mysite/conreg.html";
+                }
+                if (tem != 1 && tem1 != 2) {
+                    alert("输入错误");
+                }
+            }
+        }
+    })
+</script>
+
+
+</body>
+</html>

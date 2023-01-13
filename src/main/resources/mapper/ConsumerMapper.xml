@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.forum.dao.ConsumerMapper">
+
+
+    <select id="selectByUP" resultType="int" parameterType="string">
+        select count(username)
+        from consumer
+        where  username= #{username}
+        and password=#{password}
+    </select>
+    <select id="selectByName" resultType="int" parameterType="string">
+        select count(username)
+        from consumer
+        where  username= #{username}
+    </select>
+    <select id="selectByFalseName" resultType="com.example.forum.entity.Consumer" parameterType="string">
+        select *
+        from consumer
+        where  username= #{username}
+    </select>
+    <insert id="insertConsumer"  parameterType="Consumer">
+        insert into consumer(name, phone, position, username, password)
+        values(#{name},#{phone},#{position},#{username},#{password})
+    </insert>
+</mapper>

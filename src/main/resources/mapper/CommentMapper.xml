@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.forum.dao.CommentMapper">
+    <insert id="addComment"  parameterType="Comment">
+        insert into comment(consumer_nickname, comments, time, food_id)
+        values(#{consumerNickname},#{comments},#{time},#{foodId})
+    </insert>
+    <select id="getComment" resultType="com.example.forum.entity.Comment" >
+        select *
+        from comment
+        where  food_id= #{foodId}
+    </select>
+</mapper>

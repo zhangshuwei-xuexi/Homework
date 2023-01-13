@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.forum.dao.FoodMapper">
+
+
+    <select id="targetFood" resultType="com.example.forum.entity.Food" >
+        select *
+        from food
+        where price between #{low} and #{high}
+    </select>
+    <select id="getMaxId" resultType="int" >
+        select max(id)
+        from food
+    </select>
+    <select id="getFoodByName" resultType="com.example.forum.entity.Food" >
+        select *
+        from food
+        where  bussiness_id= #{bussinessId}
+        and name like "%"#{name}"%"
+    </select>
+    <select id="getAllFood" resultType="com.example.forum.entity.Food" >
+        select *
+        from food
+    </select>
+    <insert id="addFood"  parameterType="Food">
+        insert into food(bussiness_id, name, price, size)
+        values(#{bussinessId},#{name},#{price},#{size})
+    </insert>
+    <delete id="deleteFood" parameterType="int">
+        delete from food
+        where id = #{id}
+    </delete>
+    <update id="modifyFood" parameterType="Food">
+        update food
+        set name=#{name},price=#{price},size=#{size}
+        where id=#{id};
+    </update>
+
+</mapper>

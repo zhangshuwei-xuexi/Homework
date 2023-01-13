@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.forum.dao.BussinessMapper">
+
+
+    <select id="selectByUP" resultType="int" parameterType="string">
+        select count(username)
+        from bussiness
+        where  username= #{username}
+        and password=#{password}
+    </select>
+    <select id="selectByName" resultType="int" parameterType="string">
+        select count(username)
+        from bussiness
+        where  username= #{username}
+    </select>
+    <select id="getIdByUserName" resultType="int" parameterType="string">
+        select id
+        from bussiness
+        where  username= #{username}
+    </select>
+    <select id="getIdByCanName" resultType="int" parameterType="string">
+        select id
+        from bussiness
+        where  name= #{name}
+    </select>
+
+    <select id="getMyFood" resultType="com.example.forum.entity.Food" parameterType="int">
+        select *
+        from food
+        where  bussiness_id= #{id}
+    </select>
+    <insert id="insertBussiness"  parameterType="Bussiness">
+        insert into bussiness(platform_id, name, phone, position, username, password)
+        values(#{platformId},#{name},#{phone},#{position},#{username},#{password})
+    </insert>
+
+
+</mapper>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        #app {
+            width: 800px;
+            height: 520px;
+            border: 1px darkgray solid;
+            border-radius: 5px;
+            margin: 200px auto;
+            padding: 10px;
+            text-align: center;
+            background-color: aliceblue;
+        }
+
+        body {
+            background-image: url(http://192.168.147.137/back.jpg);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-attachment: fixed;
+        }
+
+        .but {
+            width: 150px;
+            height: 30px;
+
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <p>商&nbsp&nbsp&nbsp&nbsp家&nbsp&nbsp&nbsp&nbsp注&nbsp&nbsp&nbsp&nbsp册(137)</p>
+
+    <el-input placeholder="请输入平台名字,1是饿了么,2是美团" v-model="platform_id">
+        <template slot="prepend">平台编号</template>
+    </el-input>
+    <br><br>
+    <el-input placeholder="请输入餐厅名字" v-model="name">
+        <template slot="prepend">餐厅名字</template>
+    </el-input>
+    <br><br>
+    <el-input placeholder="请输入联系方式" v-model="phone">
+        <template slot="prepend">电话号码</template>
+    </el-input>
+    <br><br>
+    <el-input placeholder="请输入餐厅位置" v-model="position">
+        <template slot="prepend">餐厅位置</template>
+    </el-input>
+    <br><br>
+    <el-input placeholder="请输入用户名" v-model="username">
+        <template slot="prepend">用户名</template>
+    </el-input>
+    <br><br>
+    <el-input placeholder="请输入密码" v-model="password" show-password></el-input>
+
+    <br><br>
+    <el-input placeholder="请再次输入密码" v-model="passwordrepeat" show-password></el-input>
+
+    <br><br>
+    <input type=button class="but" v-model="submit" @click=reg()> </input>
+</div>
+</body>
+<!--cdn引入ElementUI组件必须先引入Vue-->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- cdn引入ElementUI组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+<script type="text/javascript">
+    let vm = new Vue({
+        el: "#app",//把这个app容器加载到 vue中
+        data: {
+            platform_id: "",
+            name: "",
+            phone: "",
+            position: "",
+            username: "",
+            password: "",
+            passwordrepeat: "",
+            submit: "提      交"
+        },
+        methods: {
+            reg() {
+                if(this.password!=this.passwordrepeat){
+                    alert("输入的两次密码不一致");
+                    return;
+                }
+                axios.post('http://192.168.147.137:8082/user/busreg', {
+                    "platform_id": this.platform_id,
+                    "name": this.name,
+                    "phone": this.phone,
+                    "position": this.position,
+                    "username": this.username,
+                    "password": this.password
+                }).then(function (res) {
+                    if (res.data.code == "1") {//注册成功
+                        location.href = "login.html";
+                    }
+                    if (res.data.code == "2") {//重复
+                        alert("用户名重复");
+                    }
+                    if (res.data.code == "3") {//未知错误
+                        alert("未知错误");
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+
+            }
+        }
+
+    })
+</script>
+</html>
